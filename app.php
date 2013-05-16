@@ -209,4 +209,28 @@ function is_match($str)
 		return $p[1];
 	}
 }
+
+/**
+ * 每日一句
+ * 
+ * @access public
+ * @param string $str
+ * @return string
+ */
+function daily_sentence($str)
+{
+	$array = array("英语","每日一句","再来一个","robot");
+	$match = implode("|",$array);
+	if (preg_match("/($match)/",$str,$p))
+	{
+		$rand = mt_rand(1, 70);
+		$data =file_get_contents("http://news.iciba.com/dailysentence-1-2-{$rand}.html");
+		preg_match_all("/content_(.*)<a href=(.*)>(.*)<\/a>/",$data,$key);
+		preg_match_all("/note_(.*)>(.*)</",$data,$val);
+		$data = array(array_pop($key) , array_pop($val));
+		$key = mt_rand(0,count($val[0]) - 1);
+		return $data[0][$key] . ' -- ' . $data[1][$key];
+	}
+}
+
 /* End of file app.php */
